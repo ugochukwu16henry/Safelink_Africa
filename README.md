@@ -53,8 +53,14 @@ To become the leading safety platform in Africa, connecting communities and prot
 git clone https://github.com/safelinkafrica/safelink-africa.git
 cd safelink-africa
 
-# Install dependencies
-npm run install:all
+# Install backend dependencies
+npm install
+npm run install:services
+
+# Install mobile app dependencies (separate step due to dependency conflicts)
+cd mobile
+npm install --legacy-peer-deps
+cd ..
 
 # Start services with Docker Compose
 docker-compose up -d
@@ -65,6 +71,8 @@ npm run migrate
 # Start development servers
 npm run dev
 ```
+
+**Note**: Backend and mobile dependencies are installed separately due to React Native/Expo dependency conflicts. See [INSTALL.md](./INSTALL.md) for detailed instructions.
 
 ## 📱 Features
 
