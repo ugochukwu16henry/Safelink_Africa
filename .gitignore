@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Docker
+docker-compose.override.yml
+
+# Database
+*.sqlite
+*.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Mobile
+mobile/.expo/
+mobile/.expo-shared/
+mobile/dist/
+mobile/android/app/build/
+mobile/ios/build/
+mobile/*.p12
+mobile/*.mobileprovision
+
+# Secrets
+*.pem
+*.key
+*.cert
+secrets/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+

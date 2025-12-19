@@ -1,0 +1,215 @@
+version: '3.8'
+
+services:
+  # Database Services
+  postgres:
+    image: postgres:15-alpine
+    container_name: safelink-postgres
+    environment:
+      POSTGRES_USER: safelink
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-safelink_dev_password}
+      POSTGRES_DB: safelink_africa
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U safelink"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: safelink-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Services
+  auth-service:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    container_name: safelink-auth
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: safelink_africa
+      DB_USER: safelink
+      DB_PASSWORD: ${DB_PASSWORD:-safelink_dev_password}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_change_in_production}
+      JWT_EXPIRES_IN: 7d
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/auth:/app
+      - /app/node_modules
+
+  emergency-service:
+    build:
+      context: ./services/emergency
+      dockerfile: Dockerfile
+    container_name: safelink-emergency
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: safelink_africa
+      DB_USER: safelink
+      DB_PASSWORD: ${DB_PASSWORD:-safelink_dev_password}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SOCKET_IO_PORT: 3002
+      AUTH_SERVICE_URL: http://auth-service:3001
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+    volumes:
+      - ./services/emergency:/app
+      - /app/node_modules
+
+  reporting-service:
+    build:
+      context: ./services/reporting
+      dockerfile: Dockerfile
+    container_name: safelink-reporting
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: safelink_africa
+      DB_USER: safelink
+      DB_PASSWORD: ${DB_PASSWORD:-safelink_dev_password}
+      AUTH_SERVICE_URL: http://auth-service:3001
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+    volumes:
+      - ./services/reporting:/app
+      - /app/node_modules
+
+  transport-service:
+    build:
+      context: ./services/transport
+      dockerfile: Dockerfile
+    container_name: safelink-transport
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: safelink_africa
+      DB_USER: safelink
+      DB_PASSWORD: ${DB_PASSWORD:-safelink_dev_password}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      AUTH_SERVICE_URL: http://auth-service:3001
+    ports:
+      - "3004:3004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+    volumes:
+      - ./services/transport:/app
+      - /app/node_modules
+
+  notifications-service:
+    build:
+      context: ./services/notifications
+      dockerfile: Dockerfile
+    container_name: safelink-notifications
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      FCM_SERVER_KEY: ${FCM_SERVER_KEY:-}
+    ports:
+      - "3005:3005"
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/notifications:/app
+      - /app/node_modules
+
+  iot-gateway:
+    build:
+      context: ./services/iot-gateway
+      dockerfile: Dockerfile
+    container_name: safelink-iot-gateway
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      MQTT_BROKER_URL: mqtt://mosquitto:1883
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: safelink_africa
+      DB_USER: safelink
+      DB_PASSWORD: ${DB_PASSWORD:-safelink_dev_password}
+    ports:
+      - "3006:3006"
+      - "1883:1883"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./services/iot-gateway:/app
+      - /app/node_modules
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: safelink-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./services/iot-gateway/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+
+volumes:
+  postgres_data:
+  redis_data:
+  mosquitto_data:
+  mosquitto_logs:
+
+networks:
+  default:
+    name: safelink-network
+
