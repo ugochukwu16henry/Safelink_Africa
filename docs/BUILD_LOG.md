@@ -88,7 +88,9 @@ Step-by-step build and test log. We build in small steps and test as we go.
 5. **Run auth service:** `npm run dev` — then open http://localhost:4001/health  
 6. **Build & test emergency:** `cd services/emergency && npm run build && npm test`  
 7. **Run emergency service:** `npm run dev` — then open http://localhost:4002/health  
-8. **Run admin web app:** `cd web && npm install && npm run dev` — then open http://localhost:3000
+8. **Run admin web app:** From repo root run `npm install`, then `cd web && npm run dev` — then open http://localhost:3000
+
+**If you see "next is not recognized" or TAR_ENTRY_ERROR:** The web app now uses a launcher (`web/run-next.js`) that finds Next from root or web. If install was corrupted, from repo root run: `Remove-Item -Recurse -Force node_modules; npm install`, then `cd web && npm run dev`.
 
 ---
 
