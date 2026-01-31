@@ -1,0 +1,19 @@
+{
+  "name": "safelink-africa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SafeLink Africa — continent-wide safety ecosystem for Africa",
+  "scripts": {
+    "build:shared": "cd shared && npm run build",
+    "test": "npm run test --workspaces --if-present",
+    "dev:auth": "cd services/auth && npm run dev",
+    "dev:emergency": "cd services/emergency && npm run dev"
+  },
+  "workspaces": [
+    "shared",
+    "services/*"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
