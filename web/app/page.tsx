@@ -2,8 +2,11 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-2xl font-bold text-ink mb-2">Dashboard</h1>
-      <p className="text-ink-soft mb-8">
+      <p className="text-ink-soft mb-2">
         Welcome to the SafeLink Africa admin dashboard. Manage emergency alerts, community reports, and users.
+      </p>
+      <p className="text-sm text-ink-muted mb-8">
+        This app runs at <strong className="text-safe-teal">http://localhost:3000</strong>. The links below are backend APIs (different ports).
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -30,16 +33,16 @@ export default function DashboardPage() {
       </div>
 
       <section className="mt-10 p-6 bg-snow rounded-lg shadow-sm border border-cloud">
-        <h2 className="text-lg font-semibold text-ink mb-2">Quick links</h2>
+        <h2 className="text-lg font-semibold text-ink mb-2">Backend API health (open in new tab)</h2>
         <ul className="space-y-2 text-ink-soft">
           <li>
             <a href="http://localhost:4001/health" target="_blank" rel="noopener noreferrer" className="text-safe-teal hover:underline">
-              Auth service health
+              Auth service — localhost:4001
             </a>
           </li>
           <li>
             <a href="http://localhost:4002/health" target="_blank" rel="noopener noreferrer" className="text-safe-teal hover:underline">
-              Emergency service health
+              Emergency service — localhost:4002
             </a>
           </li>
         </ul>

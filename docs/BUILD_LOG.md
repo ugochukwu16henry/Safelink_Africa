@@ -57,10 +57,18 @@ Step-by-step build and test log. We build in small steps and test as we go.
 
 ---
 
-## Step 5 — (Planned) Admin web app shell
+## Step 5 — Admin web app shell ✅
 
-- Next.js or React app with design system
-- Basic layout and routing
+**Done:**
+
+- [x] Next.js 14 (App Router) with TypeScript and Tailwind
+- [x] Design system: Tailwind theme extended with Safe Teal, Amber, SOS Red, ink, sky, snow, etc. (see `web/tailwind.config.ts` and `web/app/globals.css`)
+- [x] Layout: header nav (Safe Teal), main content area
+- [x] Pages: Dashboard (`/`), Emergency Alerts (`/alerts`), Community Reports (`/reports`)
+- [x] Dashboard cards with accent borders; quick links to Auth and Emergency health
+- [x] Run: `cd web && npm install && npm run dev` — then open http://localhost:3000
+
+**Next:** Mobile app shell (React Native) with design tokens and core screens.
 
 ---
 
@@ -79,8 +87,9 @@ Step-by-step build and test log. We build in small steps and test as we go.
 4. **Test auth health:** `npm test` (starts server, hits `/health`, exits).
 5. **Run auth service:** `npm run dev` — then open http://localhost:4001/health  
 6. **Build & test emergency:** `cd services/emergency && npm run build && npm test`  
-7. **Run emergency service:** `npm run dev` — then open http://localhost:4002/health
+7. **Run emergency service:** `npm run dev` — then open http://localhost:4002/health  
+8. **Run admin web app:** `cd web && npm install && npm run dev` — then open http://localhost:3000
 
 ---
 
-*Last updated: Step 4 — Emergency service (trigger, location, GET :id).*
+*Last updated: Step 5 — Admin web app shell (Next.js, design system, Dashboard, Alerts, Reports).*

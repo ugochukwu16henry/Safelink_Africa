@@ -21,11 +21,11 @@ SafeLink Africa gives people across Africa fast, reliable ways to get help and s
 
 ```
 Safelink_Africa/
-├── docs/           # Architecture, design system, build log
+├── docs/           # Architecture, design system, API, build log
 ├── shared/         # Shared types, utils, design tokens
 ├── services/       # Backend microservices (auth, emergency, reporting, etc.)
-├── web/            # Admin dashboard (React/Next.js)
-├── mobile/         # Mobile app (React Native)
+├── web/            # Admin dashboard (Next.js 14, Tailwind, design system)
+├── mobile/         # Mobile app (React Native) — planned
 └── README.md
 ```
 

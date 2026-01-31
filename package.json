@@ -7,11 +7,13 @@
     "build:shared": "cd shared && npm run build",
     "test": "npm run test --workspaces --if-present",
     "dev:auth": "cd services/auth && npm run dev",
-    "dev:emergency": "cd services/emergency && npm run dev"
+    "dev:emergency": "cd services/emergency && npm run dev",
+    "dev:web": "cd web && npm run dev"
   },
   "workspaces": [
     "shared",
-    "services/*"
+    "services/*",
+    "web"
   ],
   "engines": {
     "node": ">=18"
