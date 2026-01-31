@@ -54,4 +54,5 @@ SafeLink Africa is a **distributed microservices** system with:
 ## Documentation
 
 - [DESIGN.md](DESIGN.md) — Design system and colors
+- [API.md](API.md) — Emergency and Auth API reference
 - [BUILD_LOG.md](BUILD_LOG.md) — Step-by-step build and test log

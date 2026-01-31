@@ -40,7 +40,7 @@ Safelink_Africa/
 
 ## Getting Started
 
-See [docs/BUILD_LOG.md](docs/BUILD_LOG.md) for the step-by-step build log and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system design.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system design, [docs/API.md](docs/API.md) for the Emergency and Auth APIs, and [docs/BUILD_LOG.md](docs/BUILD_LOG.md) for the step-by-step build log.
 
 ---
 
