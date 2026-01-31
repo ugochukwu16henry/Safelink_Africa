@@ -29,9 +29,30 @@ Base URL: `http://localhost:4002` (development).
 
 ## Auth Service (port 4001)
 
+Base URL: `http://localhost:4001` (development).
+
+### Health
+
 - **GET /health** — Health check. Response: `{ status: "ok", service: "auth", timestamp: "<ISO>" }`
 - **GET /** — Service info.
 
+### Auth
+
+- **POST /auth/register** — Create account.
+  - Body: `{ email: string, password: string, name: string }` (password min 6 chars)
+  - Response (201): `{ user: { id, email, name, role }, token, expiresIn }`
+  - Errors: 400 if body invalid or password too short; 409 if email already in use.
+
+- **POST /auth/login** — Sign in.
+  - Body: `{ email: string, password: string }`
+  - Response (200): `{ user: { id, email, name, role }, token, expiresIn }`
+  - Errors: 400 if body invalid; 401 if invalid email or password.
+
+- **GET /auth/me** — Current user (requires Bearer token).
+  - Header: `Authorization: Bearer <token>`
+  - Response (200): `{ user: { id, email, name, role } }`
+  - Errors: 401 if missing/invalid/expired token.
+
 ---
 
-*More endpoints (auth login/register, reporting, transport) will be added as services are built.*
+*More endpoints (reporting, transport) will be added as services are built.*

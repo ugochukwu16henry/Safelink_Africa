@@ -25,7 +25,7 @@ Safelink_Africa/
 ├── shared/         # Shared types, utils, design tokens
 ├── services/       # Backend microservices (auth, emergency, reporting, etc.)
 ├── web/            # Admin dashboard (Next.js 14, Tailwind, design system)
-├── mobile/         # Mobile app (React Native) — planned
+├── mobile/         # Mobile app (Expo / React Native) — Home, SOS, Profile
 └── README.md
 ```
 

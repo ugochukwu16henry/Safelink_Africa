@@ -72,10 +72,36 @@ Step-by-step build and test log. We build in small steps and test as we go.
 
 ---
 
-## Step 6 — (Planned) Mobile app shell
+## Step 6 — Mobile app shell ✅
 
-- React Native project with design tokens
-- Core screens: Home, SOS, Profile
+**Done:**
+
+- [x] React Native (Expo SDK 51) with TypeScript
+- [x] Design tokens: `mobile/src/theme/colors.ts` (Safe Teal, Amber, SOS Red, sky, ink, snow)
+- [x] Bottom tabs: Home, SOS, Profile
+- [x] **HomeScreen** — welcome, quick actions list
+- [x] **SOSScreen** — one-tap SOS button; calls Emergency API `POST /emergency/trigger` (localhost:4002)
+- [x] **ProfileScreen** — placeholder for account and trusted contacts
+- [x] Run: `cd mobile && npm install && npx expo start` — then scan QR with Expo Go or run on simulator
+
+**Note:** On a physical device, set `EMERGENCY_API` in SOSScreen to your machine’s IP (e.g. `http://192.168.1.x:4002`) so the app can reach the Emergency service.
+
+---
+
+## Step 7 — Auth: register + login with JWT ✅
+
+**Done:**
+
+- [x] Auth store: in-memory users, password hashing (scrypt), find by email/id
+- [x] **POST /auth/register** — body: `{ email, password, name }` → returns `{ user, token }` (201); 409 if email in use
+- [x] **POST /auth/login** — body: `{ email, password }` → returns `{ user, token }` (200); 401 if invalid
+- [x] **GET /auth/me** — header `Authorization: Bearer <token>` → returns `{ user }` (200); 401 if invalid/expired
+- [x] JWT signing with `JWT_SECRET` (env or dev default); optional `JWT_EXPIRES_IN` (default 7d)
+- [x] Auth middleware for protected routes
+- [x] Tests: register, login, GET /auth/me, duplicate email (409), wrong password (401)
+- [x] Run: `cd services/auth && npm run build && npm test`
+
+**Next:** Wire mobile app to Auth (login/register screen, store token, send token with Emergency SOS).
 
 ---
 
@@ -92,6 +118,8 @@ Step-by-step build and test log. We build in small steps and test as we go.
 
 **If you see "next is not recognized" or TAR_ENTRY_ERROR:** The web app now uses a launcher (`web/run-next.js`) that finds Next from root or web. If install was corrupted, from repo root run: `Remove-Item -Recurse -Force node_modules; npm install`, then `cd web && npm run dev`.
 
+9. **Run mobile app:** `cd mobile && npm install && npx expo start` — then open in Expo Go (scan QR) or simulator.
+
 ---
 
-*Last updated: Step 5 — Admin web app shell (Next.js, design system, Dashboard, Alerts, Reports).*
+*Last updated: Step 7 — Auth register/login/JWT and GET /auth/me.*
