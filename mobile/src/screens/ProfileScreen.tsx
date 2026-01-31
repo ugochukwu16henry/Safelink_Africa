@@ -1,16 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { colors, spacing } from '../theme/colors';
+import { useAuth } from '../context/AuthContext';
 
 export function ProfileScreen() {
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    Alert.alert('Log out', 'Are you sure?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Log out', style: 'destructive', onPress: logout },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
       <Text style={styles.subtitle}>Manage your account and trusted contacts</Text>
-      <View style={styles.card}>
-        <Text style={styles.cardLabel}>Not signed in</Text>
-        <Text style={styles.cardText}>Sign in and add trusted contacts to receive SOS alerts.</Text>
-      </View>
+      {user ? (
+        <>
+          <View style={styles.card}>
+            <Text style={styles.cardLabel}>Signed in as</Text>
+            <Text style={styles.cardText}>{user.email}</Text>
+            <Text style={styles.cardName}>{user.name}</Text>
+          </View>
+          <Pressable style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Log out</Text>
+          </Pressable>
+        </>
+      ) : null}
       <View style={styles.card}>
         <Text style={styles.cardLabel}>App version</Text>
         <Text style={styles.cardText}>SafeLink Africa 1.0.0</Text>
@@ -54,5 +72,24 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
     color: colors.ink,
+  },
+  cardName: {
+    fontSize: 14,
+    color: colors.inkSoft,
+    marginTop: spacing.xs,
+  },
+  logoutButton: {
+    backgroundColor: colors.sosRedLight,
+    borderRadius: 12,
+    padding: spacing.md,
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.sosRed,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.sosRed,
   },
 });

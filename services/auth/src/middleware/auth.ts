@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { findUserById } from '../store';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'safelink-africa-dev-secret-change-in-production';
+const JWT_SECRET: string = process.env.JWT_SECRET ?? 'safelink-africa-dev-secret-change-in-production';
+const SEVEN_DAYS_SEC = 7 * 24 * 60 * 60;
+const JWT_EXPIRES_SEC: number = process.env.JWT_EXPIRES_IN ? parseInt(process.env.JWT_EXPIRES_IN, 10) : SEVEN_DAYS_SEC;
 
 export interface AuthPayload {
   userId: string;
@@ -39,7 +41,7 @@ export function signToken(userId: string, email: string, role: string): string {
   return jwt.sign(
     { userId, email, role },
     JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    { expiresIn: JWT_EXPIRES_SEC }
   );
 }
 

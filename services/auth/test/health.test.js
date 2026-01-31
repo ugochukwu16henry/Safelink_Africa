@@ -1,14 +1,15 @@
 /**
  * SafeLink Africa — Auth service health check test
  * Run after build: node test/health.test.js
+ * Uses in-process server (no spawn) for reliability on Windows.
  */
 
-const { spawn } = require('child_process');
 const http = require('http');
+const path = require('path');
 
-function request(port, path) {
+function request(port, pathName) {
   return new Promise((resolve, reject) => {
-    const req = http.get(`http://127.0.0.1:${port}${path}`, (res) => {
+    const req = http.get(`http://127.0.0.1:${port}${pathName}`, (res) => {
       let data = '';
       res.on('data', (chunk) => (data += chunk));
       res.on('end', () => {
@@ -24,22 +25,19 @@ function request(port, path) {
 }
 
 async function run() {
-  const port = 4001;
-  const server = spawn('node', ['dist/index.js'], {
-    cwd: __dirname + '/..',
-    stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, PORT: String(port) },
-  });
+  const { app } = require(path.join(__dirname, '..', 'dist', 'index.js'));
+  const server = app.listen(0);
+  const port = server.address().port;
 
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  const result = await request(port, '/health');
-  server.kill('SIGTERM');
-
-  if (result.status !== 200 || result.body.status !== 'ok') {
-    console.error('Health check failed:', result);
-    process.exit(1);
+  try {
+    const result = await request(port, '/health');
+    if (result.status !== 200 || result.body?.status !== 'ok') {
+      throw new Error('Health check failed: ' + JSON.stringify(result));
+    }
+    console.log('Auth health check passed:', result.body);
+  } finally {
+    server.close();
   }
-  console.log('Auth health check passed:', result.body);
 }
 
 run().catch((err) => {

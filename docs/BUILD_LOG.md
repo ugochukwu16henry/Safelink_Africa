@@ -101,7 +101,22 @@ Step-by-step build and test log. We build in small steps and test as we go.
 - [x] Tests: register, login, GET /auth/me, duplicate email (409), wrong password (401)
 - [x] Run: `cd services/auth && npm run build && npm test`
 
-**Next:** Wire mobile app to Auth (login/register screen, store token, send token with Emergency SOS).
+---
+
+## Step 8 — Wire mobile to Auth ✅
+
+**Done:**
+
+- [x] **AuthContext** — user, token, login, register, logout; token + user persisted with AsyncStorage
+- [x] **API config** — `mobile/src/config/api.ts` (AUTH_API, EMERGENCY_API)
+- [x] **LoginScreen** — email, password; calls POST /auth/login; stores token and user
+- [x] **RegisterScreen** — name, email, password (min 6); calls POST /auth/register; stores token and user
+- [x] **App flow** — if no user: show Auth stack (Login / Register); if user: show Main tabs (Home, SOS, Profile)
+- [x] **SOSScreen** — uses `user?.id` for Emergency trigger; shows “anonymous” hint when not signed in
+- [x] **ProfileScreen** — shows signed-in user (email, name) and Log out
+- [x] Dependencies: `@react-navigation/native-stack`, `@react-native-async-storage/async-storage`
+
+**Next:** Reporting service or real device location for SOS.
 
 ---
 
