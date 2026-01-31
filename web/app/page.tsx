@@ -1,4 +1,71 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
+
+function Card({
+  title,
+  value,
+  subtitle,
+  href,
+  accent,
+}: {
+  title: string;
+  value: string;
+  subtitle: string;
+  href?: string;
+  accent: 'safe-teal' | 'amber' | 'sos-red';
+}) {
+  const borderClass =
+    accent === 'safe-teal'
+      ? 'border-l-safe-teal'
+      : accent === 'amber'
+        ? 'border-l-amber'
+        : 'border-l-sos-red';
+
+  const content = (
+    <div className={`p-6 bg-snow rounded-lg shadow-sm border border-cloud border-l-4 ${borderClass}`}>
+      <p className="text-sm font-medium text-ink-muted">{title}</p>
+      <p className="text-2xl font-bold text-ink mt-1">{value}</p>
+      <p className="text-sm text-ink-soft mt-1">{subtitle}</p>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <a href={href} className="block hover:opacity-95 transition-opacity">
+        {content}
+      </a>
+    );
+  }
+  return content;
+}
+
 export default function HomePage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      router.replace('/login');
+      return;
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto flex items-center justify-center min-h-[40vh]">
+        <p className="text-ink-muted">Loading…</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-safe-teal mb-2">SafeLink Africa</h1>
@@ -7,7 +74,8 @@ export default function HomePage() {
         Admin dashboard — manage emergency alerts, community reports, and users.
       </p>
       <p className="text-sm text-ink-muted mb-8">
-        This app runs at <strong className="text-safe-teal">http://localhost:3000</strong>. The links below are backend APIs (different ports).
+        Signed in as <strong className="text-safe-teal">{user.email}</strong>. This app runs at{' '}
+        <strong className="text-safe-teal">http://localhost:3000</strong>. The links below are backend APIs (different ports).
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -50,42 +118,4 @@ export default function HomePage() {
       </section>
     </div>
   );
-}
-
-function Card({
-  title,
-  value,
-  subtitle,
-  href,
-  accent,
-}: {
-  title: string;
-  value: string;
-  subtitle: string;
-  href?: string;
-  accent: 'safe-teal' | 'amber' | 'sos-red';
-}) {
-  const borderClass =
-    accent === 'safe-teal'
-      ? 'border-l-safe-teal'
-      : accent === 'amber'
-        ? 'border-l-amber'
-        : 'border-l-sos-red';
-
-  const content = (
-    <div className={`p-6 bg-snow rounded-lg shadow-sm border border-cloud border-l-4 ${borderClass}`}>
-      <p className="text-sm font-medium text-ink-muted">{title}</p>
-      <p className="text-2xl font-bold text-ink mt-1">{value}</p>
-      <p className="text-sm text-ink-soft mt-1">{subtitle}</p>
-    </div>
-  );
-
-  if (href) {
-    return (
-      <a href={href} className="block hover:opacity-95 transition-opacity">
-        {content}
-      </a>
-    );
-  }
-  return content;
 }

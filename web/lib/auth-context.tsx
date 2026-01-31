@@ -54,36 +54,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, []);
 
+  const authError = (e: unknown) => {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (msg === 'Failed to fetch' || msg.includes('fetch') || msg.includes('NetworkError')) {
+      return new Error(
+        'Cannot reach Auth service (port 4001). Start it in a terminal: cd services/auth && npm run dev'
+      );
+    }
+    return e instanceof Error ? e : new Error(String(e));
+  };
+
   const login = useCallback(async (email: string, password: string) => {
-    const res = await fetch(`${AUTH_API}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Login failed');
-    const u = data.user as User;
-    const t = data.token as string;
-    localStorage.setItem(TOKEN_KEY, t);
-    localStorage.setItem(USER_KEY, JSON.stringify(u));
-    setToken(t);
-    setUser(u);
+    try {
+      const res = await fetch(`${AUTH_API}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || 'Login failed');
+      const u = data.user as User;
+      const t = data.token as string;
+      localStorage.setItem(TOKEN_KEY, t);
+      localStorage.setItem(USER_KEY, JSON.stringify(u));
+      setToken(t);
+      setUser(u);
+    } catch (e) {
+      throw authError(e);
+    }
   }, []);
 
   const register = useCallback(async (email: string, password: string, name: string) => {
-    const res = await fetch(`${AUTH_API}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Registration failed');
-    const u = data.user as User;
-    const t = data.token as string;
-    localStorage.setItem(TOKEN_KEY, t);
-    localStorage.setItem(USER_KEY, JSON.stringify(u));
-    setToken(t);
-    setUser(u);
+    try {
+      const res = await fetch(`${AUTH_API}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
+      const u = data.user as User;
+      const t = data.token as string;
+      localStorage.setItem(TOKEN_KEY, t);
+      localStorage.setItem(USER_KEY, JSON.stringify(u));
+      setToken(t);
+      setUser(u);
+    } catch (e) {
+      throw authError(e);
+    }
   }, []);
 
   const logout = useCallback(() => {
