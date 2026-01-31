@@ -12,9 +12,10 @@ npx expo start
 
 Then:
 
+- **Browser (easiest):** Press `w` in the terminal to open the app in your browser. No phone or emulator needed.
 - **Expo Go:** Scan the QR code with Expo Go (Android/iOS).
-- **Android emulator:** Press `a` in the terminal.
-- **iOS simulator:** Press `i` in the terminal (Mac only).
+- **Android emulator:** Press `a` (requires Android SDK).
+- **iOS simulator:** Press `i` (Mac only).
 
 ## Auth and APIs
 

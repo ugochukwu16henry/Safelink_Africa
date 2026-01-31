@@ -1,14 +1,21 @@
 /**
  * SafeLink Africa — Emergency API
+ * GET /emergency — list all alerts (newest first)
  * POST /emergency/trigger — one-tap SOS
  * POST /emergency/location — update location for active alert
- * GET /emergency/:id — get alert status (optional)
+ * GET /emergency/:id — get alert and latest location
  */
 
 import { Router, Request, Response } from 'express';
 import * as store from '../store';
 
 export const emergencyRouter = Router();
+
+// GET /emergency — list all alerts (newest first)
+emergencyRouter.get('/', (req: Request, res: Response) => {
+  const alerts = store.listAlerts();
+  res.json({ alerts });
+});
 
 // POST /emergency/trigger — create new emergency alert
 emergencyRouter.post('/trigger', (req: Request, res: Response) => {

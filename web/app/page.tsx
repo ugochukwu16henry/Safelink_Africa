@@ -1,9 +1,10 @@
-export default function DashboardPage() {
+export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold text-ink mb-2">Dashboard</h1>
+      <h1 className="text-3xl font-bold text-safe-teal mb-2">SafeLink Africa</h1>
+      <p className="text-xl text-ink-soft mb-1">You&apos;re safe. We&apos;re here.</p>
       <p className="text-ink-soft mb-2">
-        Welcome to the SafeLink Africa admin dashboard. Manage emergency alerts, community reports, and users.
+        Admin dashboard — manage emergency alerts, community reports, and users.
       </p>
       <p className="text-sm text-ink-muted mb-8">
         This app runs at <strong className="text-safe-teal">http://localhost:3000</strong>. The links below are backend APIs (different ports).

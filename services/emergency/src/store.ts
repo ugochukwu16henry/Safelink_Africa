@@ -70,3 +70,10 @@ export function resolveAlert(id: string): boolean {
 export function getLocations(alertId: string): StoredLocation[] {
   return locationLogs.get(alertId) ?? [];
 }
+
+/** List all alerts, newest first. */
+export function listAlerts(): StoredAlert[] {
+  return Array.from(alerts.values()).sort(
+    (a, b) => new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime()
+  );
+}

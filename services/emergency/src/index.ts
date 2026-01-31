@@ -22,7 +22,7 @@ app.get('/', (_, res) => {
     service: 'emergency',
     message: 'SafeLink Africa Emergency Service',
     version: '1.0.0',
-    endpoints: ['POST /emergency/trigger', 'POST /emergency/location', 'GET /emergency/:id'],
+    endpoints: ['GET /emergency', 'POST /emergency/trigger', 'POST /emergency/location', 'GET /emergency/:id'],
   });
 });
 

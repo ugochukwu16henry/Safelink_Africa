@@ -70,6 +70,16 @@ async function run() {
     }
     console.log('✓ POST /emergency/location');
 
+    // List alerts
+    const list = await request(port, 'GET', '/emergency');
+    if (list.status !== 200 || !Array.isArray(list.body?.alerts)) {
+      throw new Error('GET /emergency list failed: ' + JSON.stringify(list));
+    }
+    if (list.body.alerts.length < 1 || list.body.alerts[0].id !== alertId) {
+      throw new Error('Expected at least one alert in list: ' + JSON.stringify(list.body));
+    }
+    console.log('✓ GET /emergency (list)');
+
     // Get alert
     const getAlert = await request(port, 'GET', '/emergency/' + alertId);
     if (getAlert.status !== 200 || getAlert.body?.alert?.id !== alertId) {

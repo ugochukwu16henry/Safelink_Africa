@@ -116,6 +116,19 @@ Step-by-step build and test log. We build in small steps and test as we go.
 - [x] **ProfileScreen** — shows signed-in user (email, name) and Log out
 - [x] Dependencies: `@react-navigation/native-stack`, `@react-native-async-storage/async-storage`
 
+---
+
+## Step 9 — Admin: live Emergency alerts ✅
+
+**Done:**
+
+- [x] **Emergency service:** `listAlerts()` in store; **GET /emergency** returns `{ alerts }` (newest first)
+- [x] **Admin web app:** `/alerts` page is a client component that fetches GET http://localhost:4002/emergency
+- [x] **Alerts page:** Loading state, error state (with hint to run Emergency service), empty state, table of alerts (time, userId, status, location, alert id)
+- [x] **Refresh** button to reload alerts
+- [x] Status badges: active (red), resolved (teal), cancelled (gray)
+- [x] API doc: GET /emergency added to docs/API.md
+
 **Next:** Reporting service or real device location for SOS.
 
 ---

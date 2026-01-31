@@ -11,6 +11,9 @@ Base URL: `http://localhost:4002` (development).
 
 ### Emergency alerts
 
+- **GET /emergency** — List all alerts (newest first).
+  - Response (200): `{ alerts: Array<{ id, userId, status, latitude, longitude, triggeredAt, resolvedAt? }> }`
+
 - **POST /emergency/trigger** — Create a new emergency alert (one-tap SOS).
   - Body: `{ userId: string, latitude: number, longitude: number }`
   - Response (201): `{ id, userId, status: "active", latitude, longitude, triggeredAt }`
