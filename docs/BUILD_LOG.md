@@ -133,6 +133,24 @@ Step-by-step build and test log. We build in small steps and test as we go.
 
 ---
 
+## Step 10 — Reporting service ✅
+
+**Done:**
+
+- [x] **Reports service** (Node.js/Express on port 4003): `services/reports/`
+- [x] In-memory store: create, list, get, update status (pending | reviewed | resolved)
+- [x] **POST /reports** — body: `{ type, description, latitude, longitude, reporterId?, mediaUrls? }` → returns report (201)
+- [x] **GET /reports** — returns `{ reports }` (newest first)
+- [x] **GET /reports/:id** — returns one report; 404 if not found
+- [x] **PATCH /reports/:id** — body: `{ status }` → returns updated report; 400/404 on error
+- [x] Integration tests: health, create, list, get, PATCH status, validation (400), 404
+- [x] **Admin web app:** `/reports` page fetches GET http://localhost:4003/reports; table with time, type, description, reporter, location, status, id; Refresh button; loading/error/empty states; status badges (pending=amber, reviewed=sky, resolved=teal)
+- [x] API doc: Reports service section in docs/API.md
+
+**Next:** Real device location for SOS, or PostgreSQL for persistence.
+
+---
+
 ### How to run and test (on your machine)
 
 1. **Prerequisites:** Node.js 18+ installed.
@@ -146,8 +164,8 @@ Step-by-step build and test log. We build in small steps and test as we go.
 
 **If you see "next is not recognized" or TAR_ENTRY_ERROR:** The web app now uses a launcher (`web/run-next.js`) that finds Next from root or web. If install was corrupted, from repo root run: `Remove-Item -Recurse -Force node_modules; npm install`, then `cd web && npm run dev`.
 
-9. **Run mobile app:** `cd mobile && npm install && npx expo start` — then open in Expo Go (scan QR) or simulator.
+11. **Run mobile app:** `cd mobile && npm install && npx expo start` — then open in Expo Go (scan QR) or simulator.
 
 ---
 
-*Last updated: Step 7 — Auth register/login/JWT and GET /auth/me.*
+*Last updated: Step 10 — Reporting service and admin Community Reports page.*

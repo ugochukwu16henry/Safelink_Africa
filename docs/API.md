@@ -58,4 +58,34 @@ Base URL: `http://localhost:4001` (development).
 
 ---
 
-*More endpoints (reporting, transport) will be added as services are built.*
+## Reports Service (port 4003)
+
+Base URL: `http://localhost:4003` (development).
+
+### Health
+
+- **GET /health** — Service health check.
+  - Response: `{ status: "ok", service: "reports", timestamp: "<ISO>" }`
+
+### Community reports
+
+- **GET /reports** — List all reports (newest first).
+  - Response (200): `{ reports: Array<{ id, reporterId?, type, description, latitude, longitude, status, createdAt, mediaUrls? }> }`
+
+- **POST /reports** — Create a community report.
+  - Body: `{ type: string, description: string, latitude: number, longitude: number, reporterId?: string, mediaUrls?: string[] }`
+  - Response (201): `{ id, reporterId?, type, description, latitude, longitude, status: "pending", createdAt, mediaUrls? }`
+  - Errors: 400 if body invalid.
+
+- **GET /reports/:id** — Get one report.
+  - Response (200): report object.
+  - Errors: 404 if not found.
+
+- **PATCH /reports/:id** — Update report status (admin).
+  - Body: `{ status: "pending" | "reviewed" | "resolved" }`
+  - Response (200): updated report object.
+  - Errors: 400 if status invalid; 404 if report not found.
+
+---
+
+*More endpoints (transport, notifications) will be added as services are built.*

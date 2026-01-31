@@ -8,6 +8,7 @@
     "test": "npm run test --workspaces --if-present",
     "dev:auth": "cd services/auth && npm run dev",
     "dev:emergency": "cd services/emergency && npm run dev",
+    "dev:reports": "cd services/reports && npm run dev",
     "dev:web": "cd web && npm run dev"
   },
   "workspaces": [
