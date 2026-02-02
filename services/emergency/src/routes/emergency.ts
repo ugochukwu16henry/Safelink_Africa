@@ -1,47 +1,69 @@
 /**
- * Emergency routes
+ * SafeLink Africa — Emergency API
+ * GET /emergency — list all alerts (newest first)
+ * POST /emergency/trigger — one-tap SOS
+ * POST /emergency/location — update location for active alert
+ * GET /emergency/:id — get alert and latest location
  */
 
-import { Router } from 'express';
-import { body } from 'express-validator';
-import { triggerEmergency, getEmergency, cancelEmergency, getEmergencyHistory } from '../controllers/emergencyController';
-import { authenticateToken } from '../middleware/auth';
+import { Router, Request, Response } from 'express';
+import * as store from '../store';
 
 export const emergencyRouter = Router();
 
-// All emergency routes require authentication
-emergencyRouter.use(authenticateToken);
+// GET /emergency — list all alerts (newest first)
+emergencyRouter.get('/', (req: Request, res: Response) => {
+  const alerts = store.listAlerts();
+  res.json({ alerts });
+});
 
-/**
- * POST /api/emergency/trigger
- * Trigger SOS emergency alert
- */
-emergencyRouter.post(
-  '/trigger',
-  [
-    body('type').isIn(['medical', 'security', 'fire', 'accident', 'natural_disaster', 'other']),
-    body('latitude').isFloat({ min: -90, max: 90 }),
-    body('longitude').isFloat({ min: -180, max: 180 }),
-    body('message').optional().isString().isLength({ max: 500 }),
-  ],
-  triggerEmergency
-);
+// POST /emergency/trigger — create new emergency alert
+emergencyRouter.post('/trigger', (req: Request, res: Response) => {
+  const { userId, latitude, longitude } = req.body;
+  if (typeof userId !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number') {
+    res.status(400).json({
+      error: 'Bad request',
+      message: 'userId (string), latitude (number), longitude (number) required',
+    });
+    return;
+  }
+  const alert = store.createAlert(userId, latitude, longitude);
+  res.status(201).json(alert);
+});
 
-/**
- * GET /api/emergency/:id
- * Get emergency alert details
- */
-emergencyRouter.get('/:id', getEmergency);
+// POST /emergency/location — append location for active alert
+emergencyRouter.post('/location', (req: Request, res: Response) => {
+  const { alertId, latitude, longitude } = req.body;
+  if (
+    typeof alertId !== 'string' ||
+    typeof latitude !== 'number' ||
+    typeof longitude !== 'number'
+  ) {
+    res.status(400).json({
+      error: 'Bad request',
+      message: 'alertId (string), latitude (number), longitude (number) required',
+    });
+    return;
+  }
+  const ok = store.addLocation(alertId, latitude, longitude);
+  if (!ok) {
+    res.status(404).json({
+      error: 'Not found',
+      message: 'Alert not found or no longer active',
+    });
+    return;
+  }
+  res.status(200).json({ ok: true });
+});
 
-/**
- * POST /api/emergency/:id/cancel
- * Cancel emergency alert
- */
-emergencyRouter.post('/:id/cancel', cancelEmergency);
-
-/**
- * GET /api/emergency/history
- * Get user's emergency history
- */
-emergencyRouter.get('/history', getEmergencyHistory);
-
+// GET /emergency/:id — get alert and latest location
+emergencyRouter.get('/:id', (req: Request, res: Response) => {
+  const alert = store.getAlert(req.params.id);
+  if (!alert) {
+    res.status(404).json({ error: 'Not found', message: 'Alert not found' });
+    return;
+  }
+  const locations = store.getLocations(alert.id);
+  const latest = locations.length > 0 ? locations[locations.length - 1] : null;
+  res.json({ alert, latestLocation: latest });
+});

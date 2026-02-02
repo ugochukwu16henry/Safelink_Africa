@@ -1,9 +1,10 @@
-# SafeLink Africa 🛡️
+# SafeLink Africa
 
-**Your Safety. Your Community. One App.**
+**A continent-wide safety ecosystem for Africa** — connecting individuals, families, transport users, communities, and emergency responders.
 
-A Pan-African safety application providing SOS alerts, community reporting, transport monitoring, and IoT integration to protect lives across Africa.
+## Mission
 
+<<<<<<< HEAD
 ## 👤 Founder & Owner
 
 **Henry Maobughichi Ugochukwu** - Founder, Owner & Creator of SafeLink Africa
@@ -11,13 +12,24 @@ A Pan-African safety application providing SOS alerts, community reporting, tran
 SafeLink Africa was conceived and created by Henry Maobughichi Ugochukwu with the vision of making Africa a safer place through innovative technology solutions.
 
 ## 🎯 Vision
+=======
+SafeLink Africa gives people across Africa fast, reliable ways to get help and stay safe: one-tap SOS, community reporting, safe transport tracking, and women & family safety — all in one trusted platform.
+>>>>>>> 75461f9f54e23f0bd985aa69bc7c4cdc169a9734
 
-To become the leading safety platform in Africa, connecting communities and protecting millions of lives through technology.
+## What We're Building
 
-## 🏗️ Architecture
+| Module | Description |
+|--------|-------------|
+| **Emergency Alert** | One-tap SOS, live video/audio, auto location, panic timer, offline SMS/USSD fallback |
+| **Community Safety** | Report incidents with photos/video, anonymous option, community moderators |
+| **Safe Transport** | Trip tracking, unexpected stop alerts, driver verification, share trip with trusted contacts |
+| **Women & Family Safety** | Hidden emergency trigger, safe walk map, silent reporting |
+| **Smart Home (IoT)** | Door/window sensors, motion, camera integrations, push alerts |
+| **Admin Dashboard** | Manage reports, alerts, users, heat maps, analytics |
 
-### Microservices Backend
+## Repository Structure
 
+<<<<<<< HEAD
 - **Auth Service**: User authentication and authorization (JWT/OAuth)
 - **Emergency Service**: SOS alerts and emergency response
 - **Reporting Service**: Community incident reporting
@@ -81,14 +93,30 @@ npm run reset:db
 
 # Start development servers
 npm run dev
+=======
+```
+Safelink_Africa/
+├── docs/           # Architecture, design system, API, build log
+├── shared/         # Shared types, utils, design tokens
+├── services/       # Backend microservices (auth, emergency, reporting, etc.)
+├── web/            # Admin dashboard (Next.js 14, Tailwind, design system)
+├── mobile/         # Mobile app (Expo / React Native) — Home, SOS, Profile
+└── README.md
+>>>>>>> 75461f9f54e23f0bd985aa69bc7c4cdc169a9734
 ```
 
-**Note**: Backend and mobile dependencies are installed separately due to React Native/Expo dependency conflicts. See [INSTALL.md](./INSTALL.md) for detailed instructions.
+## Tech Stack
 
-## 📱 Features
+- **Mobile:** React Native (Android & iOS)
+- **Backend:** Node.js + TypeScript, microservices
+- **Real-time:** Socket.IO / WebRTC
+- **Database:** PostgreSQL
+- **Admin:** React / Next.js
+- **Security:** AES-256, RSA-2048, JWT, encrypted streams
 
-### MVP (Phase 1-3)
+## Getting Started
 
+<<<<<<< HEAD
 - ✅ SOS Emergency Alerts (<3 second activation)
 - ✅ Community Incident Reporting
 - ✅ Transport Monitoring
@@ -151,7 +179,10 @@ Copyright © 2024 SafeLink Africa. All rights reserved.
 - Website: https://safelinkafrica.com
 - Email: info@safelinkafrica.com
 - Support: support@safelinkafrica.com
+=======
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system design, [docs/API.md](docs/API.md) for the Emergency and Auth APIs, and [docs/BUILD_LOG.md](docs/BUILD_LOG.md) for the step-by-step build log.
+>>>>>>> 75461f9f54e23f0bd985aa69bc7c4cdc169a9734
 
 ---
 
-**Built with ❤️ for the safety of Africa**
+*Building safety for Africa, step by step.*

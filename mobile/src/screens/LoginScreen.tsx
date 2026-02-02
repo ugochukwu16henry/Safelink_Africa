@@ -1,146 +1,111 @@
-/**
- * Login Screen
- */
-
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { colors, spacing } from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
-import { useNavigation } from '@react-navigation/native';
 
-export default function LoginScreen() {
-  const [phoneNumber, setPhoneNumber] = useState('');
+export function LoginScreen({ onRegister }: { onRegister: () => void }) {
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-  const navigation = useNavigation();
 
-  async function handleLogin() {
-    if (!phoneNumber || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+  const handleLogin = async () => {
+    if (!email.trim() || !password) {
+      Alert.alert('Error', 'Enter email and password');
       return;
     }
-
+    setLoading(true);
     try {
-      setLoading(true);
-      await login(phoneNumber, password);
-    } catch (error: any) {
-      Alert.alert('Login Failed', error.response?.data?.error?.message || 'Invalid credentials');
+      await login(email.trim(), password);
+    } catch (e) {
+      Alert.alert('Login failed', e instanceof Error ? e.message : 'Please try again.');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.logo}>🛡️ SafeLink</Text>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to continue</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-          autoCapitalize="none"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoCapitalize="none"
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.linkButton}
-          onPress={() => navigation.navigate('Register' as never)}
-        >
-          <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+      <Text style={styles.title}>Log in</Text>
+      <Text style={styles.subtitle}>SafeLink Africa</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor={colors.inkMuted}
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        editable={!loading}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor={colors.inkMuted}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        editable={!loading}
+      />
+      <Pressable style={[styles.button, loading && styles.buttonDisabled]} onPress={handleLogin} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Signing in…' : 'Log in'}</Text>
+      </Pressable>
+      <Pressable style={styles.link} onPress={onRegister} disabled={loading}>
+        <Text style={styles.linkText}>Don't have an account? Sign up</Text>
+      </Pressable>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
+    backgroundColor: colors.sky,
+    padding: spacing.lg,
+    paddingTop: spacing.xxl,
     justifyContent: 'center',
-    padding: 20,
-  },
-  logo: {
-    fontSize: 48,
-    textAlign: 'center',
-    marginBottom: 20,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 10,
+    fontSize: 24,
+    fontWeight: '700',
+    color: colors.ink,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 40,
+    fontSize: 14,
+    color: colors.inkSoft,
+    marginBottom: spacing.xl,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: colors.snow,
+    borderRadius: 12,
+    padding: spacing.md,
+    marginBottom: spacing.md,
     fontSize: 16,
+    color: colors.ink,
+    borderWidth: 1,
+    borderColor: colors.cloud,
   },
   button: {
-    backgroundColor: '#0057D9',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: colors.safeTeal,
+    borderRadius: 12,
+    padding: spacing.md,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: spacing.sm,
   },
+  buttonDisabled: { opacity: 0.7 },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.snow,
   },
-  linkButton: {
-    marginTop: 20,
+  link: {
+    marginTop: spacing.lg,
     alignItems: 'center',
   },
   linkText: {
-    color: '#0057D9',
     fontSize: 14,
+    color: colors.safeTeal,
+    fontWeight: '600',
   },
 });
-

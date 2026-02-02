@@ -1,72 +1,91 @@
-# SafeLink Africa API Documentation
+# SafeLink Africa — API Reference
 
-## Base URL
-- Development: `http://localhost:3001-3006`
-- Production: `https://api.safelinkafrica.com`
+## Emergency Service (port 4002)
 
-## Authentication
-All protected endpoints require a Bearer token in the Authorization header:
-```
-Authorization: Bearer <access_token>
-```
+Base URL: `http://localhost:4002` (development).
 
-## Services
+### Health
 
-### Auth Service (Port 3001)
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `POST /api/auth/verify-phone` - Verify phone number
-- `POST /api/auth/refresh` - Refresh access token
-- `POST /api/auth/logout` - Logout user
-- `GET /api/users/me` - Get user profile
-- `PUT /api/users/me` - Update user profile
-- `POST /api/users/emergency-contacts` - Add emergency contact
+- **GET /health** — Service health check.
+  - Response: `{ status: "ok", service: "emergency", timestamp: "<ISO>" }`
 
-### Emergency Service (Port 3002)
-- `POST /api/emergency/trigger` - Trigger SOS alert
-- `GET /api/emergency/:id` - Get emergency details
-- `POST /api/emergency/:id/cancel` - Cancel emergency
-- `GET /api/emergency/history` - Get emergency history
+### Emergency alerts
 
-### Reporting Service (Port 3003)
-- `POST /api/reports` - Create incident report
-- `GET /api/reports` - Get reports
-- `GET /api/reports/nearby` - Get nearby reports
-- `GET /api/reports/:id` - Get report details
-- `PUT /api/reports/:id/status` - Update report status (admin)
+- **GET /emergency** — List all alerts (newest first).
+  - Response (200): `{ alerts: Array<{ id, userId, status, latitude, longitude, triggeredAt, resolvedAt? }> }`
 
-### Transport Service (Port 3004)
-- `POST /api/transport/trips` - Start trip
-- `POST /api/transport/trips/:id/location` - Update trip location
-- `POST /api/transport/trips/:id/end` - End trip
-- `GET /api/transport/trips/:id` - Get trip details
-- `GET /api/transport/trips` - Get trip history
+- **POST /emergency/trigger** — Create a new emergency alert (one-tap SOS).
+  - Body: `{ userId: string, latitude: number, longitude: number }`
+  - Response (201): `{ id, userId, status: "active", latitude, longitude, triggeredAt }`
+  - Errors: 400 if body invalid.
 
-### Notifications Service (Port 3005)
-- `POST /api/notifications/send` - Send notification
-- `GET /api/notifications` - Get notifications
-- `PUT /api/notifications/:id/read` - Mark as read
+- **POST /emergency/location** — Append location for an active alert.
+  - Body: `{ alertId: string, latitude: number, longitude: number }`
+  - Response (200): `{ ok: true }`
+  - Errors: 400 if body invalid; 404 if alert not found or not active.
 
-## Response Format
-All responses follow this format:
-```json
-{
-  "success": true,
-  "data": {},
-  "timestamp": "2024-01-01T00:00:00Z"
-}
-```
+- **GET /emergency/:id** — Get alert and latest location.
+  - Response (200): `{ alert: { id, userId, status, latitude, longitude, triggeredAt, resolvedAt? }, latestLocation: { alertId, latitude, longitude, timestamp } | null }`
+  - Errors: 404 if alert not found.
 
-Error responses:
-```json
-{
-  "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Error message",
-    "details": {}
-  },
-  "timestamp": "2024-01-01T00:00:00Z"
-}
-```
+---
 
+## Auth Service (port 4001)
+
+Base URL: `http://localhost:4001` (development).
+
+### Health
+
+- **GET /health** — Health check. Response: `{ status: "ok", service: "auth", timestamp: "<ISO>" }`
+- **GET /** — Service info.
+
+### Auth
+
+- **POST /auth/register** — Create account.
+  - Body: `{ email: string, password: string, name: string }` (password min 6 chars)
+  - Response (201): `{ user: { id, email, name, role }, token, expiresIn }`
+  - Errors: 400 if body invalid or password too short; 409 if email already in use.
+
+- **POST /auth/login** — Sign in.
+  - Body: `{ email: string, password: string }`
+  - Response (200): `{ user: { id, email, name, role }, token, expiresIn }`
+  - Errors: 400 if body invalid; 401 if invalid email or password.
+
+- **GET /auth/me** — Current user (requires Bearer token).
+  - Header: `Authorization: Bearer <token>`
+  - Response (200): `{ user: { id, email, name, role } }`
+  - Errors: 401 if missing/invalid/expired token.
+
+---
+
+## Reports Service (port 4003)
+
+Base URL: `http://localhost:4003` (development).
+
+### Health
+
+- **GET /health** — Service health check.
+  - Response: `{ status: "ok", service: "reports", timestamp: "<ISO>" }`
+
+### Community reports
+
+- **GET /reports** — List all reports (newest first).
+  - Response (200): `{ reports: Array<{ id, reporterId?, type, description, latitude, longitude, status, createdAt, mediaUrls? }> }`
+
+- **POST /reports** — Create a community report.
+  - Body: `{ type: string, description: string, latitude: number, longitude: number, reporterId?: string, mediaUrls?: string[] }`
+  - Response (201): `{ id, reporterId?, type, description, latitude, longitude, status: "pending", createdAt, mediaUrls? }`
+  - Errors: 400 if body invalid.
+
+- **GET /reports/:id** — Get one report.
+  - Response (200): report object.
+  - Errors: 404 if not found.
+
+- **PATCH /reports/:id** — Update report status (admin).
+  - Body: `{ status: "pending" | "reviewed" | "resolved" }`
+  - Response (200): updated report object.
+  - Errors: 400 if status invalid; 404 if report not found.
+
+---
+
+*More endpoints (transport, notifications) will be added as services are built.*

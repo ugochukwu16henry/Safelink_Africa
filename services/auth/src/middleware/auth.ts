@@ -1,86 +1,48 @@
-/**
- * Authentication middleware
- */
-
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from '../../../shared/types';
+import { findUserById } from '../store';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_in_production';
+const JWT_SECRET: string = process.env.JWT_SECRET ?? 'safelink-africa-dev-secret-change-in-production';
+const SEVEN_DAYS_SEC = 7 * 24 * 60 * 60;
+const JWT_EXPIRES_SEC: number = process.env.JWT_EXPIRES_IN ? parseInt(process.env.JWT_EXPIRES_IN, 10) : SEVEN_DAYS_SEC;
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: JwtPayload;
-    }
-  }
+export interface AuthPayload {
+  userId: string;
+  email: string;
+  role: string;
 }
 
-/**
- * Authenticate JWT token
- */
-export function authenticateToken(req: Request, res: Response, next: NextFunction): void {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+export interface AuthRequest extends Request {
+  user?: AuthPayload;
+}
 
-  if (!token) {
-    res.status(401).json({
-      success: false,
-      error: {
-        code: 'UNAUTHORIZED',
-        message: 'Authentication token required',
-      },
-      timestamp: new Date(),
-    });
+export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction): void {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Unauthorized', message: 'Missing or invalid Authorization header' });
     return;
   }
-
+  const token = auth.slice(7);
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-    req.user = decoded;
+    const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload & { iat?: number; exp?: number };
+    const user = findUserById(decoded.userId);
+    if (!user) {
+      res.status(401).json({ error: 'Unauthorized', message: 'User not found' });
+      return;
+    }
+    req.user = { userId: user.id, email: user.email, role: user.role };
     next();
-  } catch (error) {
-    res.status(403).json({
-      success: false,
-      error: {
-        code: 'INVALID_TOKEN',
-        message: 'Invalid or expired token',
-      },
-      timestamp: new Date(),
-    });
+  } catch {
+    res.status(401).json({ error: 'Unauthorized', message: 'Invalid or expired token' });
   }
 }
 
-/**
- * Check if user has required role
- */
-export function requireRole(...roles: string[]) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user) {
-      res.status(401).json({
-        success: false,
-        error: {
-          code: 'UNAUTHORIZED',
-          message: 'Authentication required',
-        },
-        timestamp: new Date(),
-      });
-      return;
-    }
-
-    if (!roles.includes(req.user.role)) {
-      res.status(403).json({
-        success: false,
-        error: {
-          code: 'FORBIDDEN',
-          message: 'Insufficient permissions',
-        },
-        timestamp: new Date(),
-      });
-      return;
-    }
-
-    next();
-  };
+export function signToken(userId: string, email: string, role: string): string {
+  return jwt.sign(
+    { userId, email, role },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_SEC }
+  );
 }
 
+export { JWT_SECRET };

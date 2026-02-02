@@ -1,182 +1,124 @@
-/**
- * Register Screen
- */
-
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { colors, spacing } from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
-import { useNavigation } from '@react-navigation/native';
 
-export default function RegisterScreen() {
-  const [formData, setFormData] = useState({
-    phoneNumber: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    country: 'NG',
-  });
-  const [loading, setLoading] = useState(false);
+export function RegisterScreen({ onLogin }: { onLogin: () => void }) {
   const { register } = useAuth();
-  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  async function handleRegister() {
-    if (!formData.phoneNumber || !formData.firstName || !formData.lastName || !formData.password) {
-      Alert.alert('Error', 'Please fill in all required fields');
+  const handleRegister = async () => {
+    if (!email.trim() || !password || !name.trim()) {
+      Alert.alert('Error', 'Enter email, password, and name');
       return;
     }
-
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters');
+      return;
+    }
+    setLoading(true);
     try {
-      setLoading(true);
-      await register(formData);
-      Alert.alert(
-        'Registration Successful',
-        'Please verify your phone number with the OTP sent to you.',
-        [{ text: 'OK', onPress: () => navigation.navigate('Login' as never) }]
-      );
-    } catch (error: any) {
-      Alert.alert('Registration Failed', error.response?.data?.error?.message || 'Registration failed');
+      await register(email.trim(), password, name.trim());
+    } catch (e) {
+      Alert.alert('Sign up failed', e instanceof Error ? e.message : 'Please try again.');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.logo}>🛡️ SafeLink</Text>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join SafeLink Africa</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          value={formData.phoneNumber}
-          onChangeText={(text) => setFormData({ ...formData, phoneNumber: text })}
-          keyboardType="phone-pad"
-          autoCapitalize="none"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="First Name"
-          value={formData.firstName}
-          onChangeText={(text) => setFormData({ ...formData, firstName: text })}
-          autoCapitalize="words"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChangeText={(text) => setFormData({ ...formData, lastName: text })}
-          autoCapitalize="words"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Email (Optional)"
-          value={formData.email}
-          onChangeText={(text) => setFormData({ ...formData, email: text })}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={formData.password}
-          onChangeText={(text) => setFormData({ ...formData, password: text })}
-          secureTextEntry
-          autoCapitalize="none"
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleRegister}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Sign Up</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.linkButton}
-          onPress={() => navigation.navigate('Login' as never)}
-        >
-          <Text style={styles.linkText}>Already have an account? Sign In</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+      <Text style={styles.title}>Sign up</Text>
+      <Text style={styles.subtitle}>Create your SafeLink Africa account</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        placeholderTextColor={colors.inkMuted}
+        value={name}
+        onChangeText={setName}
+        editable={!loading}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor={colors.inkMuted}
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        editable={!loading}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password (min 6 characters)"
+        placeholderTextColor={colors.inkMuted}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        editable={!loading}
+      />
+      <Pressable style={[styles.button, loading && styles.buttonDisabled]} onPress={handleRegister} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Creating account…' : 'Sign up'}</Text>
+      </Pressable>
+      <Pressable style={styles.link} onPress={onLogin} disabled={loading}>
+        <Text style={styles.linkText}>Already have an account? Log in</Text>
+      </Pressable>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    padding: 20,
-    paddingTop: 60,
-  },
-  logo: {
-    fontSize: 48,
-    textAlign: 'center',
-    marginBottom: 20,
+    backgroundColor: colors.sky,
+    padding: spacing.lg,
+    paddingTop: spacing.xxl,
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 10,
+    fontSize: 24,
+    fontWeight: '700',
+    color: colors.ink,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 40,
+    fontSize: 14,
+    color: colors.inkSoft,
+    marginBottom: spacing.xl,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: colors.snow,
+    borderRadius: 12,
+    padding: spacing.md,
+    marginBottom: spacing.md,
     fontSize: 16,
+    color: colors.ink,
+    borderWidth: 1,
+    borderColor: colors.cloud,
   },
   button: {
-    backgroundColor: '#0057D9',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: colors.safeTeal,
+    borderRadius: 12,
+    padding: spacing.md,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: spacing.sm,
   },
+  buttonDisabled: { opacity: 0.7 },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.snow,
   },
-  linkButton: {
-    marginTop: 20,
+  link: {
+    marginTop: spacing.lg,
     alignItems: 'center',
   },
   linkText: {
-    color: '#0057D9',
     fontSize: 14,
+    color: colors.safeTeal,
+    fontWeight: '600',
   },
 });
-

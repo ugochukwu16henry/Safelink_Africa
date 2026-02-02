@@ -6,44 +6,20 @@
     "description": "Pan-African safety application founded by Henry Maobughichi Ugochukwu",
     "author": "Henry Maobughichi Ugochukwu",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0057D9"
+      "backgroundColor": "#0D5C4A"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.safelinkafrica.app"
+      "bundleIdentifier": "africa.safelink.app"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0057D9"
+        "backgroundColor": "#0D5C4A"
       },
-      "package": "com.safelinkafrica.app",
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "RECEIVE_SMS",
-        "SEND_SMS"
-      ]
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "SafeLink Africa needs your location to provide emergency services."
-        }
-      ]
-    ]
+      "package": "africa.safelink.app"
+    }
   }
 }
-

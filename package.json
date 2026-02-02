@@ -1,13 +1,10 @@
 {
   "name": "safelink-africa",
   "version": "1.0.0",
-  "description": "Pan-African Safety Application - Your Safety. Your Community. One App.",
   "private": true,
-  "workspaces": [
-    "services/*",
-    "shared"
-  ],
+  "description": "SafeLink Africa — continent-wide safety ecosystem for Africa",
   "scripts": {
+<<<<<<< HEAD
     "install:all": "npm install && npm run install:services",
     "install:services": "npm install --workspace=services/auth --workspace=services/emergency --workspace=services/reporting --workspace=services/transport --workspace=services/notifications --workspace=services/iot-gateway",
     "install:mobile": "cd mobile && npm install --legacy-peer-deps",
@@ -66,4 +63,21 @@
   "author": "Henry Maobughichi Ugochukwu",
   "founder": "Henry Maobughichi Ugochukwu",
   "license": "PROPRIETARY"
+=======
+    "build:shared": "cd shared && npm run build",
+    "test": "npm run test --workspaces --if-present",
+    "dev:auth": "cd services/auth && npm run dev",
+    "dev:emergency": "cd services/emergency && npm run dev",
+    "dev:reports": "cd services/reports && npm run dev",
+    "dev:web": "cd web && npm run dev"
+  },
+  "workspaces": [
+    "shared",
+    "services/*",
+    "web"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+>>>>>>> 75461f9f54e23f0bd985aa69bc7c4cdc169a9734
 }

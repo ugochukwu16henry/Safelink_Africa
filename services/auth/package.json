@@ -1,40 +1,30 @@
 {
-  "name": "@safelink/auth-service",
+  "name": "@safelink/auth",
   "version": "1.0.0",
-  "description": "Authentication and Authorization Service for SafeLink Africa",
-  "main": "dist/index.js",
+  "private": true,
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
+    "dev": "ts-node-dev --respawn src/index.ts",
     "start": "node dist/index.js",
+<<<<<<< HEAD
     "test": "jest",
     "test:coverage": "jest --coverage",
     "migrate": "node ../../scripts/migrate.js"
+=======
+    "test": "node test/health.test.js && node test/auth.test.js"
+>>>>>>> 75461f9f54e23f0bd985aa69bc7c4cdc169a9734
   },
   "dependencies": {
     "express": "^4.18.2",
-    "pg": "^8.11.3",
-    "redis": "^4.6.10",
-    "jsonwebtoken": "^9.0.2",
-    "bcrypt": "^5.1.1",
-    "dotenv": "^16.3.1",
-    "express-validator": "^7.0.1",
     "cors": "^2.8.5",
-    "helmet": "^7.1.0",
-    "morgan": "^1.10.0"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.10.0",
     "@types/jsonwebtoken": "^9.0.5",
-    "@types/bcrypt": "^5.0.2",
-    "@types/pg": "^8.10.9",
     "@types/cors": "^2.8.17",
-    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.10.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.2",
-    "jest": "^29.7.0",
-    "@types/jest": "^29.5.8"
+    "typescript": "^5.3.0"
   }
 }
-
