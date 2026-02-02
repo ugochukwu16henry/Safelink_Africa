@@ -69,10 +69,15 @@ npm install --legacy-peer-deps
 cd ..
 
 # Start services with Docker Compose
-docker-compose up -d
+docker-compose up -d postgres redis
 
-# Run migrations
+# Wait 20 seconds for PostgreSQL to initialize
+# Then run migrations
 npm run migrate
+
+# If migration fails with password error, run:
+npm run reset:db
+# Then try migrate again
 
 # Start development servers
 npm run dev
@@ -123,6 +128,8 @@ See [TODO.md](./TODO.md) for complete task list, [PROGRESS.md](./PROGRESS.md) fo
 - [TODO List](./TODO.md) - Complete project task list
 - [Progress Tracker](./PROGRESS.md) - Current status and milestones
 - [API Documentation](./docs/API.md)
+- [API Testing Guide](./API_TESTING.md) - How to test all APIs
+- [Troubleshooting Guide](./TROUBLESHOOTING.md) - Common issues and solutions
 - [Architecture Overview](./docs/ARCHITECTURE.md)
 - [Security Guidelines](./docs/SECURITY.md)
 - [Deployment Guide](./docs/DEPLOYMENT.md)

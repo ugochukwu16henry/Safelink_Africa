@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "install:all": "npm install && npm run install:services",
-    "install:mobile": "cd mobile && npm install --legacy-peer-deps",
     "install:services": "npm install --workspace=services/auth --workspace=services/emergency --workspace=services/reporting --workspace=services/transport --workspace=services/notifications --workspace=services/iot-gateway",
     "install:mobile": "cd mobile && npm install --legacy-peer-deps",
     "dev": "concurrently \"npm run dev:services\" \"npm run dev:mobile\"",
@@ -25,13 +24,19 @@
     "test:coverage": "npm run test:coverage --workspaces",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "migrate": "node scripts/migrate.js",
+    "reset:db": "powershell -ExecutionPolicy Bypass -File scripts/reset-db.ps1",
+    "fix:db": "powershell -ExecutionPolicy Bypass -File scripts/fix-database-password.ps1",
+    "quick-fix:db": "powershell -ExecutionPolicy Bypass -File scripts/quick-fix-db.ps1",
     "verify": "node scripts/verify-setup.js",
-    "test:api": "node scripts/test-api.ps1 || bash scripts/test-api.sh",
+    "check": "powershell -ExecutionPolicy Bypass -File scripts/check-setup.ps1",
+    "test:api": "powershell -ExecutionPolicy Bypass -File scripts/test-apis.ps1",
+    "test:api:bash": "bash scripts/test-api.sh",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.1",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
@@ -62,4 +67,3 @@
   "founder": "Henry Maobughichi Ugochukwu",
   "license": "PROPRIETARY"
 }
-
