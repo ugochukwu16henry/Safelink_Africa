@@ -30,7 +30,14 @@ cp .env.example .env
 # - JWT_SECRET
 ```
 
-### Step 3: Start Infrastructure
+### Step 3: Start Docker Desktop
+**IMPORTANT**: Make sure Docker Desktop is running before proceeding!
+
+1. Open Docker Desktop application
+2. Wait for it to fully start (check system tray icon)
+3. Verify: Run `docker --version` (should show version number)
+
+### Step 4: Start Infrastructure
 ```bash
 # Start PostgreSQL and Redis
 docker-compose up -d postgres redis
@@ -39,7 +46,9 @@ docker-compose up -d postgres redis
 docker-compose ps
 ```
 
-### Step 4: Initialize Database
+**Troubleshooting**: If you get "dockerDesktopLinuxEngine" error, Docker Desktop is not running. See [DOCKER_SETUP.md](./DOCKER_SETUP.md) for help.
+
+### Step 5: Initialize Database
 ```bash
 # Run database migrations
 npm run migrate
@@ -48,7 +57,7 @@ npm run migrate
 # psql -U safelink -d safelink_africa -f scripts/init-db.sql
 ```
 
-### Step 5: Start Backend Services
+### Step 6: Start Backend Services
 ```bash
 # Start all services in development mode
 npm run dev
@@ -61,7 +70,7 @@ npm run dev
 # npm run dev:notifications # Port 3005
 ```
 
-### Step 6: Start Mobile App
+### Step 7: Start Mobile App
 ```bash
 # In a new terminal
 cd mobile

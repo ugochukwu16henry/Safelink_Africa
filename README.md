@@ -4,6 +4,12 @@
 
 A Pan-African safety application providing SOS alerts, community reporting, transport monitoring, and IoT integration to protect lives across Africa.
 
+## 👤 Founder & Owner
+
+**Henry Maobughichi Ugochukwu** - Founder, Owner & Creator of SafeLink Africa
+
+SafeLink Africa was conceived and created by Henry Maobughichi Ugochukwu with the vision of making Africa a safer place through innovative technology solutions.
+
 ## 🎯 Vision
 
 To become the leading safety platform in Africa, connecting communities and protecting millions of lives through technology.
@@ -102,16 +108,26 @@ npm run dev
 
 ## 📊 Project Status
 
-**Current Phase**: Development (Months 4-9)
+**Current Phase**: Development (Months 4-9) - 40% Complete
 
-See [ROADMAP.md](./docs/ROADMAP.md) for detailed phase breakdown.
+- **Overall Progress**: 20% Complete
+- **Backend Services**: ✅ 100% MVP Complete
+- **Mobile App**: 🚧 70% Complete
+- **Documentation**: ✅ 80% Complete
+
+See [TODO.md](./TODO.md) for complete task list, [PROGRESS.md](./PROGRESS.md) for detailed progress tracking, and [API_STATUS.md](./API_STATUS.md) for API verification status.
 
 ## 📖 Documentation
 
+- [About SafeLink Africa](./ABOUT.md) - Founder and company information
+- [TODO List](./TODO.md) - Complete project task list
+- [Progress Tracker](./PROGRESS.md) - Current status and milestones
 - [API Documentation](./docs/API.md)
 - [Architecture Overview](./docs/ARCHITECTURE.md)
 - [Security Guidelines](./docs/SECURITY.md)
 - [Deployment Guide](./docs/DEPLOYMENT.md)
+- [Installation Guide](./INSTALL.md)
+- [Quick Start Guide](./QUICKSTART.md)
 
 ## 🤝 Contributing
 
@@ -120,6 +136,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for gu
 ## 📄 License
 
 Copyright © 2024 SafeLink Africa. All rights reserved.
+
+**Founder & Owner**: Henry Maobughichi Ugochukwu
 
 ## 📞 Contact
 

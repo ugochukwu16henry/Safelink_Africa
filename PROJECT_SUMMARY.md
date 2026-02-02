@@ -4,6 +4,12 @@
 
 SafeLink Africa is a comprehensive Pan-African safety application designed to protect lives across the continent through technology. The platform provides SOS emergency alerts, community incident reporting, transport monitoring, and IoT integration.
 
+## 👤 Founder & Owner
+
+**Henry Maobughichi Ugochukwu** - Founder, Owner & Creator
+
+SafeLink Africa was conceived, created, and is owned by Henry Maobughichi Ugochukwu, who envisioned a Pan-African safety platform to protect millions of lives through innovative technology solutions.
+
 ## ✅ What Has Been Built
 
 ### 1. Project Structure ✅

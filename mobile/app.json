@@ -3,6 +3,8 @@
     "name": "SafeLink Africa",
     "slug": "safelink-africa",
     "version": "1.0.0",
+    "description": "Pan-African safety application founded by Henry Maobughichi Ugochukwu",
+    "author": "Henry Maobughichi Ugochukwu",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

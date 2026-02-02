@@ -32,6 +32,10 @@ Thank you for your interest in contributing to SafeLink Africa! This document pr
 - Report security vulnerabilities privately
 - Follow security best practices
 
+## Founder & Owner
+
+**Henry Maobughichi Ugochukwu** - Founder, Owner & Creator of SafeLink Africa
+
 ## Questions?
 
 Contact the team at dev@safelinkafrica.com
